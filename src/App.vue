@@ -2,21 +2,41 @@
 import InputCredentials from './components/InputCredentials.vue'
 import authForm from './composables/forms/authForm'
 import authHandler from './composables/handlers/authHandler'
+import {validateUsername} from './validator/validate'
+
 const { username, password, errors, validate } = authForm()
+const handleClick = () => {
+  validate()
+  authHandler(username.value, password.value, errors.value);
+};
 </script>
 
 <template>
-  <section class="max-h-screen h-screen bg-green-600 flex items-center justify-center">
-    <div class="p-10 bg-amber-700/85">
-      <div class="flex flex-col gap-2 mb-7">
-        <div>icon</div>
-        <h1>Titulo</h1>
+  <section class="h-screen w-screen flex items-center justify-center 
+           bg-center bg-cover bg-no-repeat bg-fixed 
+           bg-[url('/fondoLogin3.jpg')]">
+  
+    <div class="p-10 bg-transparent w-100 rounded-xl 
+                backdrop-blur-sm border border-white/10 shadow-2xl">
+      <div class="items-center flex flex-col gap-2 mb-7">
+        <img src="/agroTerraLogo.png" alt="logo" class="w-65 h-30">
+        <h1>Inicio de sesión</h1>
       </div>
-      <div class="flex flex-col gap-4">
-        <InputCredentials />
-        <input v-model="username" type="text" placeholder="usuario" />
-        <input v-model="password" type="text" placeholder="contrasena" />
-        <button @click="authHandler(username, password, errors)">login</button>
+      <div class="flex flex-col gap-2">
+        <InputCredentials 
+          title="Usuario"
+          placeholder="Usuario"
+          type="text"
+          @update:model-value="(val) => username=val"
+        />
+        <InputCredentials 
+          title="Contraseña"
+          placeholder="Contraseña"
+          type="password"
+          @update:model-value="(val) => password=val"
+        />
+        <button @click="handleClick" class="w-full py-3 mt-6 text-lg font-semibold rounded-full
+                       bg-white text-black hover:bg-green-700 transition duration-300 shadow-xl">Iniciar sesión</button>
       </div>
     </div>
   </section>
