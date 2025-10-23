@@ -9,20 +9,15 @@ export default [
     meta: { requiresAuth: true },
     children: [
       {
-        path: "home",
-        name: "home",
-        component: () => import("../pages/home/LayoutHome.vue"),
+        path: "login",
+        name: "login",
+        component: () => import("../pages/login.vue"),
         /**
          * devuelve distintos graficos para cada rol
          * quiza para que el fronted sepa
          * poner un type :
          * contenido de informacion
          */
-      },
-      {
-        path: "calendar",
-        name: "calendar",
-        component: () => import("../pages/calendar/LayoutCalendar.vue"),
       },
     ],
   },
