@@ -1,29 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import Dashboard from '@/pages/dashboard.vue'
-import Login from '@/pages/login.vue'
-
-const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    redirect: '/login'
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    meta: { requiresAuth: true },
-    component: Dashboard
-  }
-]
+import routes from './routes'
+import registerGuards from './guard'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes, //importamos las rutas declaradas
 })
+
+registerGuards(router) // <- aplica guardias
 
 export default router

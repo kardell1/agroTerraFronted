@@ -1,27 +1,38 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+export type TypeStoreUser = {
+  username: string
+  token: string
+  isAuthenticated: boolean
+}
 
-export const useAuthStore = defineStore('auth', () => {
-  const user = ref(null)
-  const token = ref<string | null>(localStorage.getItem('auth_token'))
-
-  const isAuthenticated = computed(() => !!token.value)
-
-  const login = (userToken: string) => {
-    token.value = userToken
-    localStorage.setItem('auth_token', userToken)
-  }
-
-  const logout = () => {
-    token.value = null
-    localStorage.removeItem('auth_token')
-  }
-
+function initialState() {
   return {
-    user,
-    token,
-    isAuthenticated,
-    login,
-    logout
+    username: '',
+    token: '',
+    isAuthenticated: false,
+    // menu: [],
   }
+}
+export const useUserStore = defineStore('user', {
+  //informacion inicial del usuario
+  state: (): TypeStoreUser => initialState(),
+  //los actions son lo que podemos modificar del state
+  //sin esto no podemos modificar nada
+  actions: {
+    // login(username: string, token: string) {
+    //   this.username = username; // Modifica el estado
+    //   this.token = token; // Modifica el estado
+    //   this.isAuthenticated = true; // Cambia el estado
+    //   // this.rol = rol;
+    // },
+    logout() {
+      Object.assign(this, initialState())
+    },
+    setInformation({ isAuthenticated, token, username }: TypeStoreUser) {
+      this.username = username
+      this.token = token
+      this.isAuthenticated = isAuthenticated
+      // this.menu = menu
+    },
+  },
 })
