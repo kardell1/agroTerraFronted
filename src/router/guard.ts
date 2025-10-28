@@ -3,11 +3,11 @@
  * esta verificando los accesos a cosas internas del dash
  */
 import type { Router } from "vue-router";
-import { useUserStore } from "../store/useUserStore";
+import { useAuthStore } from "@/store/authStore";
 
 export default function registerGuards(router: Router) {
   router.beforeEach((to, _, next) => {
-    const authStore = useUserStore();
+    const authStore = useAuthStore();
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next({ path: "/" }); // redirige a login
     } else {

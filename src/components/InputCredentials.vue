@@ -37,7 +37,7 @@
           :placeholder="placeholder"
           :value="modelValue"  
           @input="handleInput"
-          class="outline-none w-full"
+          class="p-1 outline-none w-full text-white font-sans"
         />
       </label>
     </div>

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-
+//aqui iria el validateusername 
 const authForm = () => {
   const username = ref('')
   const password = ref('')
