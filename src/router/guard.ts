@@ -9,7 +9,7 @@ export default function registerGuards(router: Router) {
   router.beforeEach((to, _, next) => {
     const authStore = useUserStore()
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-      next({ path: '/' }) // redirige a login
+      next({ path: '/' })
     } else {
       next()
     }

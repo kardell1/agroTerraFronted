@@ -4,7 +4,7 @@ const authService = async (username: string, password: string) => {
     username: username,
     password: password,
   }
-  const response = await axios.post('', credentials)
+  const response = await axios.post('http://localhost:3000/api/authenticate', credentials)
   return response
 }
 export default authService

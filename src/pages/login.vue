@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import InputCredentials from '@/components/InputCredentials.vue'
-import authForm from '@/composables/forms/authForm.ts'
-import authHandler from '@/composables/handlers/authHandler.ts'
+import authForm from '../composables/forms/authForm.ts'
+import authHandler from '../composables/handlers/authHandler'
+import fondo from '../assets/images/fondoLogin3.avif'
 
 const { username, password, errors, validate } = authForm()
 const handleClick = () => {
@@ -11,14 +12,13 @@ const handleClick = () => {
 </script>
 
 <template>
-     <section class="h-screen w-screen flex items-center justify-center 
-           bg-center bg-cover bg-no-repeat bg-fixed 
-           bg-[url('/fondoLogin3.jpg')]">
+    <section class="h-screen w-screen flex items-center justify-center bg-center bg-cover  bg-no-repeat bg-fixbed"
+                    :style="`background-image: url(${fondo})`"> 
   
     <div class="p-10 bg-transparent w-100 rounded-xl 
                 backdrop-blur-sm border border-white/10 shadow-2xl">
       <div class="items-center flex flex-col gap-2 mb-6">
-        <img src="/agroTerraLogo.png" alt="logo" class="w-65 h-30">
+        <img src="../assets/images/agroTerraLogo.png" alt="logo" class="w-65 h-30">
         <h1>Inicio de sesión</h1>
       </div>
       <div class="flex flex-col gap-2">

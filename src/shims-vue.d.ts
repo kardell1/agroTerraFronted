@@ -3,3 +3,7 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+declare module '*.avif' { //ts reconoce .avif como un string y no como error
+  const value: string
+  export default value
+} 
