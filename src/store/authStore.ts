@@ -9,7 +9,7 @@ function initialState() {
   return {
     username: '',
     token: '',
-    isAuthenticated: false,
+    isAuthenticated: true,
     // menu: [],
   }
 }
@@ -27,7 +27,7 @@ export const useUserStore = defineStore('user', {
     // },
     logout() {
       Object.assign(this, initialState())
-      localStorage.removeItem("token")
+      localStorage.removeItem('token')
     },
     setInformation({ isAuthenticated, token, username }: TypeStoreUser) {
       this.username = username

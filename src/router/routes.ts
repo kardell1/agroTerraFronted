@@ -1,5 +1,5 @@
-import Dashboard from '@/pages/dashboard.vue'
-import Login from '@/pages/login.vue'
+import DashboardPage from '../pages/DashboardPage.vue'
+import LoginPage from '../pages/LoginPage.vue'
 
 export default [
   {
@@ -9,12 +9,12 @@ export default [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: LoginPage,
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
     meta: { requiresAuth: true },
-    component: Dashboard,
+    component: DashboardPage,
   },
 ]

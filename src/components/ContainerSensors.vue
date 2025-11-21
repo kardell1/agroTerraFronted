@@ -49,7 +49,7 @@ const SensorTemperatura = computed(() => contextSocket?.SensorTemperatura ?? '0'
     <Card
       :alertHigh="80"
       :alertLow="0"
-      tittle="Luz"
+      tittle="Dioxido de carbono"
       :iconName="iconoLuz"
       styleLine="#fde047"
       styleText="text-yellow-300"
@@ -57,7 +57,7 @@ const SensorTemperatura = computed(() => contextSocket?.SensorTemperatura ?? '0'
       unit=" lux"
       description="Lectura de datos"
     />
-
+    <!--
     <Card
       :alertHigh="80"
       :alertLow="20"
@@ -68,6 +68,6 @@ const SensorTemperatura = computed(() => contextSocket?.SensorTemperatura ?? '0'
       :value="parseInt(SensorSuelo)"
       unit="%"
       description="Lectura de datos"
-    />
+    /> -->
   </div>
 </template>
