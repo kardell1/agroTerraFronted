@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import ModuleSection from '../components/ModuleSection.vue'
 import NavBar from '../components/NavBar.vue'
+import SensorChart from '../components/SensorChart.vue';
+import SensorHistory from '../components/SensorHistory.vue';
 </script>
 
 <template>
@@ -10,7 +12,9 @@ import NavBar from '../components/NavBar.vue'
     </header>
     <!-- aca renderizamos las rutas internas  -->
     <main class="flex-1 px-20">
-      <ModuleSection />
+     <!-- <ModuleSection /> -->
+     <SensorHistory />
+     <SensorChart />
     </main>
   </div>
 </template>

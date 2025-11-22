@@ -3,6 +3,7 @@ import { useRouter } from "vue-router";
 import ContainerSensors from "@/components/ContainerSensors.vue";
 import { provideSocketContext } from "../composables/ContextSocket.ts";
 import { useUserStore } from "../store/authStore.ts";
+import SensorChart from "../components/SensorChart.vue";
 
 
 provideSocketContext();
@@ -31,6 +32,7 @@ const handleLogout = () => {
       </div>
     </header>
   <ContainerSensors />
+  <SensorChart />
   </div>
 </template>
 
