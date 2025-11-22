@@ -32,7 +32,6 @@ const handleLogout = () => {
       </div>
     </header>
   <ContainerSensors />
-  <SensorChart />
   </div>
 </template>
 
