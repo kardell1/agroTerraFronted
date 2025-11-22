@@ -37,7 +37,7 @@ const iconoHumedad = 'material-symbols-light:water-voc'
         <CardsSensor
           :alertHigh="80"
           :alertLow="20"
-          tittle="Humedad"
+          tittle="Dioxido de carbono"
           :iconName="iconoHumedad"
           styleLine="#0284c7"
           styleText="text-sky-600"
@@ -50,7 +50,7 @@ const iconoHumedad = 'material-symbols-light:water-voc'
         <CardsSensor
           :alertHigh="80"
           :alertLow="20"
-          tittle="Humedad"
+          tittle="Oxigeno"
           :iconName="iconoHumedad"
           styleLine="#0284c7"
           styleText="text-sky-600"
