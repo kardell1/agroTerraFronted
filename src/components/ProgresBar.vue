@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+//este componete se usa dentro de cardSensor
 import { Icon } from '@iconify/vue'
 import { computed } from 'vue'
 

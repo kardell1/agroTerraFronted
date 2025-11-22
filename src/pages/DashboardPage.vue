@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ModuleSection from '../components/ModuleSection.vue'
 import NavBar from '../components/NavBar.vue'
 </script>
 
@@ -10,7 +9,7 @@ import NavBar from '../components/NavBar.vue'
     </header>
     <!-- aca renderizamos las rutas internas  -->
     <main class="flex-1 px-20 py-5">
-      <ModuleSection />
+      <router-view />
     </main>
   </div>
 </template>
