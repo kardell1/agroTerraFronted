@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// este componente no se esta utilizando
 import Card from './Cards.vue'
 import { inject, computed } from 'vue'
 

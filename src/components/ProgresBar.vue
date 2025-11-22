@@ -1,23 +1,24 @@
 <script lang="ts" setup>
-import { Icon } from "@iconify/vue";
-import { computed } from "vue";
+//este componete se usa dentro de cardSensor
+import { Icon } from '@iconify/vue'
+import { computed } from 'vue'
 
 interface Props {
-  porcentaje: number;
-  circleWidth: number;
-  radius: number;
-  iconName: string; 
-  styleLine: string;
-  styleText: string;
+  porcentaje: number
+  circleWidth: number
+  radius: number
+  iconName: string
+  styleLine: string
+  styleText: string
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
-const dashArray = computed(() => props.radius * Math.PI * 2);
+const dashArray = computed(() => props.radius * Math.PI * 2)
 const dashOffset = computed(() => {
-  const porcentajeLimitado = Math.min(Math.max(props.porcentaje, 0), 100);
-  return dashArray.value - (dashArray.value * porcentajeLimitado) / 100;
-});
+  const porcentajeLimitado = Math.min(Math.max(props.porcentaje, 0), 100)
+  return dashArray.value - (dashArray.value * porcentajeLimitado) / 100
+})
 </script>
 
 <template>
@@ -28,14 +29,9 @@ const dashOffset = computed(() => {
       :viewBox="`0, 0, ${circleWidth}, ${circleWidth}`"
     >
       <defs>
+        <!-- aca se modifica el border visual que vemos en el circulo  -->
         <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow
-            dx="0"
-            dy="0"
-            stdDeviation="5"
-            flood-color="#000"
-            flood-opacity="0.1"
-          />
+          <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#475569" flood-opacity="1" />
         </filter>
       </defs>
 
@@ -45,7 +41,7 @@ const dashOffset = computed(() => {
         :cy="circleWidth / 2"
         stroke-width="29px"
         :r="radius"
-        style="fill: none; stroke: #fff; filter: url(#shadow);"
+        style="fill: none; stroke: #fff; filter: url(#shadow)"
       ></circle>
 
       <!-- Círculo dinámico -->
@@ -63,7 +59,6 @@ const dashOffset = computed(() => {
           strokeLinejoin: 'round',
         }"
         :transform="`rotate(-90 ${circleWidth / 2} ${circleWidth / 2})`"
-        
       ></circle>
     </svg>
 

@@ -1,6 +1,5 @@
 import DashboardPage from '../pages/DashboardPage.vue'
 import LoginPage from '../pages/LoginPage.vue'
-
 export default [
   {
     path: '/',
@@ -14,7 +13,26 @@ export default [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    meta: { requiresAuth: false },
     component: DashboardPage,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'sensores',
+        name: 'sensors',
+        component: () => import('../components/ModuleSection.vue'),
+      },
+
+      {
+        path: '',
+        name: 'home',
+        component: () => import('../components/HomeSection.vue'),
+      },
+
+      {
+        path: 'historial',
+        name: 'historic',
+        component: () => import('../components/HistoricSection.vue'),
+      },
+    ],
   },
 ]
