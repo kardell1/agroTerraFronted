@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { Boxes, NotebookText, LogOut } from 'lucide-vue-next'
+import { Boxes, NotebookText, LogOut, Leaf } from 'lucide-vue-next'
 //desde este componente mandamos los datos para la navegacion
 // cada elemento del nav, esta compuesto por un icon y un title
 </script>
 
 <template>
   <nav class="flex justify-between items-center shadow-sm text-slate-700 py-3 px-20 bg-white">
-    <div class="flex items-center justify-center gap-2">
-      <span>icon</span>
+    <div class="flex cursor-pointer hover:bg-slate-100 rounded-sm items-center gap-2 px-2">
+      <span class="text-green-600 rounded-full bg-slate-100 p-2">
+        <Leaf />
+      </span>
       <div class="flex">
         <p class="font-bold">Agro</p>
         <p class="font-bold text-green-600">Terra</p>
