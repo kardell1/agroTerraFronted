@@ -6,6 +6,7 @@ import fondo from '../assets/images/fondoLogin3.avif'
 
 import { useRouter } from 'vue-router'
 // const { username, password, errors, validate } = authForm()
+// asdsad
 const router = useRouter()
 const { username, password } = authForm()
 const handleClick = () => {
