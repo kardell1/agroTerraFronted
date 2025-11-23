@@ -3,10 +3,6 @@ import LoginPage from '../pages/LoginPage.vue'
 export default [
   {
     path: '/',
-    redirect: '/login',
-  },
-  {
-    path: '/login',
     name: 'Login',
     component: LoginPage,
   },
