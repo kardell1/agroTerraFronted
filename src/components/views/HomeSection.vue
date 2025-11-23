@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import SensorChart from './SensorChart.vue'
-import { humidityData, temperatureData, co2Data } from '../data/SensorData.ts'
-import SelectModule from './SelectModule.vue'
+import SensorChart from '../SensorChart.vue'
+import { humidityData, temperatureData, co2Data } from '../../data/SensorData.ts'
+import SelectModule from '../SelectModule.vue'
+import MainCard from '../../ui/MainCard.vue'
+import HeaderUi from '../../ui/HeaderUi.vue'
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
-    <div class="flex justify-between items-center p-5 rounded-lg bg-white shadow-sm">
+  <MainCard>
+    <HeaderUi>
       <div>
         <p class="text-lg font-bold">Visualizacion de datos</p>
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
@@ -14,7 +16,7 @@ import SelectModule from './SelectModule.vue'
       <div>
         <SelectModule :data="[]" />
       </div>
-    </div>
+    </HeaderUi>
     <!-- Gráfico de Humedad -->
     <div class="bg-white p-6">
       <SensorChart
@@ -53,5 +55,5 @@ import SelectModule from './SelectModule.vue'
         :max-y="800"
       />
     </div>
-  </div>
+  </MainCard>
 </template>

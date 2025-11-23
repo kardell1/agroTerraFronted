@@ -15,19 +15,19 @@ export default [
       {
         path: 'sensores',
         name: 'sensors',
-        component: () => import('../components/ModuleSection.vue'),
+        component: () => import('../components/views/ModuleSection.vue'),
       },
 
       {
         path: '',
         name: 'home',
-        component: () => import('../components/HomeSection.vue'),
+        component: () => import('../components/views/HomeSection.vue'),
       },
 
       {
         path: 'historial',
         name: 'historic',
-        component: () => import('../components/HistoricSection.vue'),
+        component: () => import('../components/views/HistoricSection.vue'),
       },
     ],
   },

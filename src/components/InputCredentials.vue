@@ -13,12 +13,12 @@
 
 // este componente de props , esta mal escrito....
 // revisa el SelectModulo para reescribirlo
-const props = defineProps({
-  title: String,
-  placeholder: String,
-  type: String,
-  modelValue: String,
-})
+defineProps<{
+  title: string
+  placeholder: string
+  type: string
+  modelValue: string
+}>()
 
 // 3. Definimos los eventos que puede emitir el componente
 const emit = defineEmits(['update:modelValue'])
