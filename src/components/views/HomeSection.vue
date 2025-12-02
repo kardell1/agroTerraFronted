@@ -9,16 +9,16 @@ import HeaderUi from '../../ui/HeaderUi.vue'
 <template>
   <MainCard>
     <HeaderUi>
-      <div>
+      <div class="w-full">
         <p class="text-lg font-bold">Visualizacion de datos</p>
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
       </div>
-      <div>
+      <div class="w-full mt-4 md:mt-0 md:w-auto ">
         <SelectModule :data="[]" />
       </div>
     </HeaderUi>
     <!-- Gráfico de Humedad -->
-    <div class="bg-white p-6">
+    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
       <SensorChart
         title="Monitoreo de Humedad"
         description="Niveles de humedad del suelo"
@@ -31,7 +31,7 @@ import HeaderUi from '../../ui/HeaderUi.vue'
     </div>
 
     <!-- Gráfico de Temperatura -->
-    <div class="bg-white p-6">
+    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
       <SensorChart
         title="Monitoreo de Temperatura"
         description="Temperatura ambiente"
@@ -44,7 +44,7 @@ import HeaderUi from '../../ui/HeaderUi.vue'
     </div>
 
     <!-- Gráfico de CO2 -->
-    <div class="bg-white p-6">
+    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
       <SensorChart
         title="Monitoreo de CO₂"
         description="Niveles de dióxido de carbono"

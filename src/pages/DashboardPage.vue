@@ -12,7 +12,7 @@ const modal = useModalStore()
       <NavBar />
     </header>
     <!-- aca renderizamos las rutas internas  -->
-    <main class="flex-1 px-20">
+    <main class="flex-1 px-4 sm:px-6 lg:px-20">
       <router-view />
     </main>
     <!-- aca renderizar el modal -->

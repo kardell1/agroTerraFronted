@@ -85,39 +85,39 @@ const alertHistory = [
       </div>
 
       <!-- Tabla -->
-      <div class="overflow-x-auto">
-        <table class="w-full min-w-full divide-y divide-gray-200">
+      <div class="overflow-x-auto -mx-2 sm:mx-0">
+        <table class="w-full min-w-[600px] sm:min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Nro
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Sensor
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Hora Alerta
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Mensaje
               </th>
 
               <!-- Extras -->
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Estado
               </th>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Prioridad
               </th>
@@ -130,13 +130,13 @@ const alertHistory = [
               :key="alert.nro"
               class="hover:bg-gray-50 transition-colors"
             >
-              <td class="px-6 py-4 text-sm text-gray-900">{{ alert.nro }}</td>
+              <td class="px-3 py-4 text-sm text-gray-900 font-medium">{{ alert.nro }}</td>
 
-              <td class="px-6 py-4 whitespace-nowrap">
+              <td class="px-3 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div
                     :class="[
-                      'w-3 h-3 rounded-full mr-3',
+                      'w-3 h-3 sm:w-3 sm:h-3 rounded-full mr-2 sm:mr-3',
                       alert.sensor.toLowerCase() === 'humedad' ? 'bg-blue-500' : 'bg-orange-500',
                     ]"
                   ></div>
@@ -146,16 +146,18 @@ const alertHistory = [
                 </div>
               </td>
 
-              <td class="px-6 py-4 text-sm text-gray-900">
+              <td class="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">
                 {{ alert.horaAlerta }}
               </td>
 
-              <td class="px-6 py-4 text-sm text-gray-900">
-                {{ alert.mensaje }}
+              <td class="px-3 py-4 text-sm text-gray-900">
+                <div class="break-words min-w-0">
+                  {{ alert.mensaje }}
+                </div>
               </td>
 
               <!-- Estado -->
-              <td class="px-6 py-4 text-sm">
+              <td class="px-3 py-4 whitespace-nowrap">
                 <span
                   :class="[
                     'px-2 py-1 rounded text-xs font-semibold',
@@ -169,7 +171,7 @@ const alertHistory = [
               </td>
 
               <!-- Prioridad -->
-              <td class="px-6 py-4 text-sm capitalize">
+              <td class="px-3 py-4 whitespace-nowrap">
                 {{ alert.prioridad }}
               </td>
             </tr>

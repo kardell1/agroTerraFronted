@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const { username, password } = authForm()
 const handleClick = () => {
-  router.push({ name: 'Dashboard' })
+  router.push({ name: 'home' })
   // validate()
   // authHandler(username.value, password.value, errors.value);
 }
@@ -18,17 +18,17 @@ const handleClick = () => {
 
 <template>
   <section
-    class="h-screen w-screen flex items-center justify-center bg-center bg-cover bg-no-repeat bg-fixbed"
+    class="min-h-screen w-screen flex items-center justify-center bg-center bg-cover bg-no-repeat p-4"
     :style="`background-image: url(${fondo})`"
   >
     <div
-      class="p-10 bg-transparent w-100 rounded-xl backdrop-blur-sm border border-white/10 shadow-2xl"
+      class="p-4 sm:p-6 md:p-8 bg-transparent w-full max-w-xs sm:max-w-sm md:max-w-md rounded-xl backdrop-blur-sm border border-white/10 shadow-2xl"
     >
-      <div class="items-center flex flex-col gap-2 mb-6">
-        <img src="../assets/images/agroTerraLogo.png" alt="logo" class="w-65 h-30" />
-        <h1>Inicio de sesión</h1>
+      <div class="items-center flex flex-col gap-2 mb-4 sm:mb-6">
+        <img src="../assets/images/agroTerraLogo.png" alt="logo" class="w-40 sm:w-48 md:w-56 h-auto" />
+        <h1 class="text-lg sm:text-xl md:text-2xl text-white font-medium">Inicio de sesión</h1>
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-3 sm:gap-4">
         <InputCredentials
           title="Usuario"
           placeholder="Usuario"
@@ -43,7 +43,7 @@ const handleClick = () => {
         />
         <button
           @click="handleClick"
-          class="w-full py-3 mt-6 text-lg font-semibold rounded-full bg-white text-black hover:bg-green-700 transition duration-300 shadow-xl"
+          class="w-full py-2.5 sm:py-3 mt-2 sm:mt-4 text-sm sm:text-base md:text-lg font-semibold rounded-full bg-white text-black hover:bg-green-700 transition duration-300 shadow-xl"
         >
           Iniciar sesión
         </button>

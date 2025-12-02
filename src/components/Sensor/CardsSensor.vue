@@ -32,7 +32,7 @@ const textColor = computed(() => (showAlert.value ? 'text-red-500' : 'text-slate
 
 <template>
   <div
-    class="p-4 bg-white border-[3px] border-amber-900 rounded-3xl flex gap-8 w-full"
+    class="p-2 sm:p-3 md:p-4 bg-white border-[3px] border-amber-900 rounded-3xl flex gap-3 sm:gap-5 md:gap-6 lg:gap-8 w-full"
     :class="showAlert ? 'border-red-400 shadow-lg shadow-red-200' : ''"
   >
     <div class="flex justify-start relative">
@@ -47,19 +47,19 @@ const textColor = computed(() => (showAlert.value ? 'text-red-500' : 'text-slate
       <transition name="fade">
         <div
           v-if="showAlert"
-          class="absolute bg-red-500 text-white p-2 rounded-full shadow-md animate-bounce"
+          class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white p-1 sm:p-2 rounded-full shadow-md animate-bounce"
         >
-          <Icon icon="mingcute:alert-fill" width="24" height="24" />
+          <Icon icon="mingcute:alert-fill" width="12" height="12" class="sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
         </div>
       </transition>
     </div>
 
     <div class="flex flex-col justify-around">
-      <p class="text-3xl text-slate-700">{{ tittle }}</p>
-      <div class="flex gap-2 flex-col">
-        <p class="text-sm font-medium">{{ description }} :</p>
-        <div class="flex items-center gap-2">
-          <p class="text-[2em] font-extrabold" :class="textColor">{{ value }}{{ unit }}</p>
+      <p class="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-slate-700">{{ tittle }}</p>
+      <div class="flex gap-1 sm:gap-2 flex-col">
+        <p class="text-xs font-medium">{{ description }} :</p>
+        <div class="flex items-center gap-1 sm:gap-2">
+          <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2em] font-extrabold" :class="textColor">{{ value }}{{ unit }}</p>
         </div>
       </div>
     </div>

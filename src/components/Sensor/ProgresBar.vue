@@ -22,14 +22,14 @@ const dashOffset = computed(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-36 xl:h-36">
     <svg
       :width="circleWidth"
       :height="circleWidth"
       :viewBox="`0, 0, ${circleWidth}, ${circleWidth}`"
+      class="w-full h-full"
     >
       <defs>
-        <!-- aca se modifica el border visual que vemos en el circulo  -->
         <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
           <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#475569" flood-opacity="1" />
         </filter>
@@ -64,7 +64,11 @@ const dashOffset = computed(() => {
 
     <!-- Icono central -->
     <div class="absolute inset-0 flex justify-center items-center">
-      <Icon :icon="props.iconName" class="text-7xl" :class="props.styleText" />
+      <Icon 
+        :icon="props.iconName" 
+        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl" 
+        :class="props.styleText" 
+      />
     </div>
   </div>
 </template>
