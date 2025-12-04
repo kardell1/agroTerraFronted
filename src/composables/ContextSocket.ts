@@ -1,55 +1,93 @@
-import { reactive, onMounted, onUnmounted, provide } from "vue";
-import { useSocket } from "./useSocket";
+import { reactive, onMounted, onUnmounted, provide } from "vue"
+import { useMqtt } from "./useMqtt"
 
-// Definimos el tipo de datos de los sensores
 export interface SensorData {
-  SensorLuz: string;
-  SensorTemperatura: string;
-  SensorHumedad: string;
-  SensorSuelo: string;
+  SensorLuz: string
+  SensorTemperatura: string
+  SensorHumedad: string
+  SensorSuelo: string
 }
 
-// Clave para provide/inject
-export const ContextSocketKey = Symbol("ContextSocket");
+export const ContextSocketKey = Symbol("ContextSocket")
 
-// Composable que provee los datos de los sensores a los hijos
 export function provideSocketContext() {
   const data = reactive<SensorData>({
     SensorLuz: "0",
     SensorTemperatura: "0",
     SensorHumedad: "0",
     SensorSuelo: "0",
-  });
+  })
 
-  const { socket, connect, disconnect } = useSocket();
+  const { connect, subscribe, disconnect } = useMqtt()
 
-onMounted(() => {
-  connect();
+  // En tu ContextSocket.ts - Función processMqttMessage
 
-  // Escuchar eventos del socket
-  socket.value?.on("esp32/ResHumedad", (value: string) => {
-    data.SensorHumedad = value;
-  });
-  socket.value?.on("esp32/ResTemperatura", (value: string) => {
-    data.SensorTemperatura = value;
-  });
-  socket.value?.on("esp32/ResSuelo", (value: string) => {
-    data.SensorSuelo = value;
-  });
-  socket.value?.on("esp32/ResLuz", (value: string) => {
-    data.SensorLuz = value;
-  });
-});
-onUnmounted(() => {
-  socket.value?.off("esp32/ResHumedad");
-  socket.value?.off("esp32/ResTemperatura");
-  socket.value?.off("esp32/ResSuelo");
-  socket.value?.off("esp32/ResLuz");
-  disconnect();
-});
+const processMqttMessage = (message: string) => {
+  console.log('📨 Mensaje MQTT recibido:', message)
+  // Formato esperado: "TMP=23.5,HMD=45.6,LGT=12.56,SOL=78.3"
+  const parts = message.split(',') 
 
-  // Proveemos los datos a los hijos
-  provide(ContextSocketKey, data);
+  parts.forEach(part => {
+    
+    if (part.includes('=')) {
+      const [key, value] = part.split('=')
 
-  return { data };
+      if (!key || !value) {
+        console.warn('⚠️ Formato incorrecto en:', part)
+        return
+      }
+      
+      const upperKey = key.trim().toUpperCase()
+      const cleanValue = value.trim()
+      
+      switch(upperKey) {
+        case 'TMP':
+        case 'T':
+          data.SensorTemperatura = cleanValue
+          break
+        case 'HMD':
+        case 'H':
+          data.SensorHumedad = cleanValue
+          break
+        case 'LGT':
+        case 'L':
+          data.SensorLuz = cleanValue
+          break
+        case 'SOL':
+        case 'S':
+          data.SensorSuelo = cleanValue
+          break
+        default:
+          console.log(`⚠️ Clave no reconocida: ${upperKey}=${cleanValue}`)
+      }
+    }
+  })
+}
+
+  onMounted(async () => {
+    try {
+      await connect()
+      
+      // 🔴 IMPORTANTE: Reemplaza con el TOPIC CORRECTO
+      const topic = 'agroterra/sensors/data' // topic a cambiar
+      
+      subscribe(topic, processMqttMessage)
+      
+    } catch (error) {
+      console.error('Error conectando a MQTT:', error)
+      // Datos de prueba para desarrollo
+      data.SensorTemperatura = "25.5"
+      data.SensorHumedad = "65.2"
+      data.SensorLuz = "450"
+      data.SensorSuelo = "78.3"
+    }
+  })
+
+  onUnmounted(() => {
+    disconnect()
+  })
+
+  provide(ContextSocketKey, data)
+
+  return { data }
 }

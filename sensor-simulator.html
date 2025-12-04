@@ -1,0 +1,191 @@
+<!-- sensor-simulator.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulador de Sensores AgroTerra</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+    .sensor { margin: 15px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+    input { width: 80px; margin: 0 10px; padding: 5px; }
+    button { background: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    button:hover { background: #45a049; }
+    .log { margin-top: 20px; padding: 10px; background: #f5f5f5; max-height: 200px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h1>🌱 Simulador de Sensores AgroTerra</h1>
+  
+  <div class="sensor">
+    <h3>🌡️ Temperatura</h3>
+    <input type="range" id="temp" min="10" max="40" value="25" oninput="updateTemp(this.value)">
+    <span id="tempValue">25.0°C</span>
+  </div>
+  
+  <div class="sensor">
+    <h3>💧 Humedad</h3>
+    <input type="range" id="hum" min="20" max="90" value="65" oninput="updateHum(this.value)">
+    <span id="humValue">65.0%</span>
+  </div>
+  
+  <div class="sensor">
+    <h3>☀️ Luz</h3>
+    <input type="range" id="light" min="0" max="1000" value="450" oninput="updateLight(this.value)">
+    <span id="lightValue">450 lux</span>
+  </div>
+  
+  <div class="sensor">
+    <h3>🌱 Suelo</h3>
+    <input type="range" id="soil" min="0" max="100" value="78" oninput="updateSoil(this.value)">
+    <span id="soilValue">78.0%</span>
+  </div>
+  
+  <button onclick="sendData()">📤 Enviar Datos a HiveMQ</button>
+  <button onclick="startAutoSend()">🔄 Envío Automático (cada 3s)</button>
+  <button onclick="stopAutoSend()">⏹️ Detener Auto-envío</button>
+  
+  <div class="log">
+    <h3>📝 Log de Eventos:</h3>
+    <div id="log"></div>
+  </div>
+  
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script>
+    let client = null
+    let autoSendInterval = null
+    let sensorData = {
+      temp: 25.0,
+      hum: 65.0,
+      light: 450,
+      soil: 78.0
+    }
+    
+    // Elementos del DOM
+    const tempInput = document.getElementById('temp')
+    const humInput = document.getElementById('hum')
+    const lightInput = document.getElementById('light')
+    const soilInput = document.getElementById('soil')
+    
+    // Funciones para actualizar valores
+    function updateTemp(value) {
+      sensorData.temp = parseFloat(value)
+      document.getElementById('tempValue').textContent = `${sensorData.temp.toFixed(1)}°C`
+    }
+    
+    function updateHum(value) {
+      sensorData.hum = parseFloat(value)
+      document.getElementById('humValue').textContent = `${sensorData.hum.toFixed(1)}%`
+    }
+    
+    function updateLight(value) {
+      sensorData.light = parseFloat(value)
+      document.getElementById('lightValue').textContent = `${sensorData.light} lux`
+    }
+    
+    function updateSoil(value) {
+      sensorData.soil = parseFloat(value)
+      document.getElementById('soilValue').textContent = `${sensorData.soil.toFixed(1)}%`
+    }
+    
+    // Conectar a HiveMQ
+    function connectMQTT() {
+      // REEMPLAZA con TUS credenciales
+      const brokerUrl = 'wss://051e1da66fac44cb94d48b068cba3b30.s1.eu.hivemq.cloud:8884/mqtt'
+      const username = 'admin'
+      const password = 'Administrador1'
+      
+      client = mqtt.connect(brokerUrl, {
+        username: username,
+        password: password,
+        clientId: 'simulator-' + Math.random().toString(16).substr(2, 8)
+      })
+      
+      client.on('connect', () => {
+        log('✅ Conectado a HiveMQ Cloud')
+      })
+      
+      client.on('error', (err) => {
+        log('❌ Error: ' + err.message)
+      })
+    }
+    
+    // Enviar datos
+    function sendData() {
+      if (!client || !client.connected) {
+        log('⚠️ Primero conéctate a HiveMQ')
+        connectMQTT()
+        return
+      }
+      
+      // Formato 1: Simple (recomendado para pruebas)
+      const payload = `TMP=${sensorData.temp.toFixed(1)},HMD=${sensorData.hum.toFixed(1)},LGT=${sensorData.light},SOL=${sensorData.soil.toFixed(1)}`
+      
+      // Elige un topic - sugeridos:
+      const topics = [
+        'agroterra/sensors/data',      // Recomendado
+        'teffiot/frontend/events',     // Si quieres mantener el original
+        'test/sensors',                // Alternativa
+        'agroterra/test'               // Para pruebas
+      ]
+      
+      // Enviar al primer topic
+      const topic = topics[0]
+      client.publish(topic, payload, { qos: 0 }, (err) => {
+        if (!err) {
+          log(`📤 Enviado a "${topic}": ${payload}`)
+        }
+      })
+    }
+    
+    // Envío automático
+    function startAutoSend() {
+      if (autoSendInterval) {
+        clearInterval(autoSendInterval)
+      }
+      
+      autoSendInterval = setInterval(() => {
+        // Variar los valores ligeramente
+        sensorData.temp = Math.max(10, Math.min(40, sensorData.temp + (Math.random() - 0.5) * 2))
+        sensorData.hum = Math.max(20, Math.min(90, sensorData.hum + (Math.random() - 0.5) * 5))
+        sensorData.light = Math.max(0, Math.min(1000, sensorData.light + (Math.random() - 0.5) * 50))
+        sensorData.soil = Math.max(0, Math.min(100, sensorData.soil + (Math.random() - 0.5) * 3))
+        
+        // Actualizar sliders y valores
+        tempInput.value = sensorData.temp
+        humInput.value = sensorData.hum
+        lightInput.value = sensorData.light
+        soilInput.value = sensorData.soil
+        
+        updateTemp(sensorData.temp)
+        updateHum(sensorData.hum)
+        updateLight(sensorData.light)
+        updateSoil(sensorData.soil)
+        
+        // Enviar datos
+        sendData()
+      }, 3000) // Cada 3 segundos
+      
+      log('🔄 Envío automático iniciado (cada 3s)')
+    }
+    
+    function stopAutoSend() {
+      if (autoSendInterval) {
+        clearInterval(autoSendInterval)
+        autoSendInterval = null
+        log('⏹️ Envío automático detenido')
+      }
+    }
+    
+    // Log helper
+    function log(message) {
+      const logDiv = document.getElementById('log')
+      const entry = document.createElement('div')
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`
+      logDiv.appendChild(entry)
+      logDiv.scrollTop = logDiv.scrollHeight
+    }
+    
+    // Conectar automáticamente al cargar
+    connectMQTT()
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { ref } from "vue";
+/*import { ref } from "vue";
 import { io, Socket } from "socket.io-client";
 
 const socket = ref<Socket | null>(null);
@@ -17,4 +17,4 @@ export function useSocket() {
   };
 
   return { socket, connect, disconnect };
-}
+}*/

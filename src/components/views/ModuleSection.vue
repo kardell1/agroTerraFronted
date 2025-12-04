@@ -7,6 +7,9 @@ import SelectModule from '../SelectModule.vue'
 import { useModalStore } from '../../store/modalStore'
 
 const iconoHumedad = 'material-symbols-light:water-voc'
+const iconoCO = 'iwwa:co2'
+const iconoTemp = 'streamline-ultimate-color:temperature-thermometer-high'
+
 // seccion de los modulos
 const modal = useModalStore()
 const handleViewModal = () => {
@@ -44,7 +47,7 @@ const handleViewModal = () => {
         :iconName="iconoHumedad"
         styleLine="#0284c7"
         styleText="text-sky-600"
-        :value="10"
+        valueKey="SensorTemperatura"
         unit="Nu"
         description="Lectura de datos"
       />
@@ -52,11 +55,11 @@ const handleViewModal = () => {
       <CardsSensor
         :alertHigh="80"
         :alertLow="20"
-        tittle="Dioxido de carbono"
-        :iconName="iconoHumedad"
+        tittle="Dióxido de carbono"
+        :iconName="iconoCO"
         styleLine="#0284c7"
         styleText="text-sky-600"
-        :value="10"
+        valueKey="SensorTemperatura"
         unit="Nu"
         description="Lectura de datos"
       />
@@ -64,11 +67,11 @@ const handleViewModal = () => {
       <CardsSensor
         :alertHigh="80"
         :alertLow="20"
-        tittle="Oxigeno"
-        :iconName="iconoHumedad"
+        tittle="Temperatura"
+        :iconName="iconoTemp"
         styleLine="#0284c7"
         styleText="text-sky-600"
-        :value="10"
+        valueKey="SensorTemperatura"
         unit="Nu"
         description="Lectura de datos"
       />

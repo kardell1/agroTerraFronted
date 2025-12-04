@@ -2,8 +2,10 @@
 import NavBar from '../components/NavBar.vue'
 import { useModalStore } from '../store/modalStore'
 import ModalModule from '../components/modals/ModalModule.vue'
+import { provideSocketContext } from '../composables/ContextSocket'
 // importar el store
 const modal = useModalStore()
+provideSocketContext()
 </script>
 
 <template>
