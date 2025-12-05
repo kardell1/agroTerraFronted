@@ -11,7 +11,7 @@ const authService = async (username: string, password: string) => {
       `${import.meta.env.VITE_API_URL}/authenticate`,
       credentials,
     )
-    console.log('✅ Respuesta exitosa:', response.data)
+    // console.log('✅ Respuesta exitosa:', response.data)
     return response.data // success: true
   } catch (error) {
     if (axios.isAxiosError(error)) {

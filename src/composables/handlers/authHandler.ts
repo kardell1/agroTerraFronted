@@ -9,6 +9,7 @@ const authHandler = async (username: string, password: string, errors: string[])
     console.log(errors)
     return
   }
+
   try {
     const res = await authService(username, password)
     console.log(res)
@@ -22,6 +23,7 @@ const authHandler = async (username: string, password: string, errors: string[])
       isAuthenticated: res.success,
       token: res.msg,
       username: '',
+      devices: res.details,
     })
 
     router.push('/dashboard')

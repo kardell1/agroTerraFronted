@@ -1,16 +1,19 @@
 import { defineStore } from 'pinia'
+import type { DevicesType } from '../types'
 export type TypeStoreUser = {
   username: string
   token: string
   isAuthenticated: boolean
+  devices: DevicesType[]
 }
 
 function initialState() {
   return {
     username: '',
     token: '',
-    isAuthenticated: true,
+    isAuthenticated: false,
     // menu: [],
+    devices: [] as DevicesType[],
   }
 }
 export const useUserStore = defineStore('user', {
@@ -29,11 +32,11 @@ export const useUserStore = defineStore('user', {
       Object.assign(this, initialState())
       localStorage.removeItem('token')
     },
-    setInformation({ isAuthenticated, token, username }: TypeStoreUser) {
+    setInformation({ isAuthenticated, token, username, devices }: TypeStoreUser) {
       this.username = username
       this.token = token
       this.isAuthenticated = isAuthenticated
-      // this.menu = menu
+      this.devices = devices
     },
   },
 })
