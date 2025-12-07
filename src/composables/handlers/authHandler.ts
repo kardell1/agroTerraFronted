@@ -27,7 +27,9 @@ const authHandler = async (username: string, password: string, errors: string[])
     })
 
     router.push('/dashboard')
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default authHandler

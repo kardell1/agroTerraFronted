@@ -25,10 +25,10 @@ const handleViewModal = () => {
         <p class="text-lg sm:text-xl font-bold">Panel de control</p>
         <p class="text-slate-500 text-sm sm:text-[0.90rem]">Gestion de sensores y monitoreo</p>
       </div>
-      <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 w-full sm:w-auto mt-4 sm:mt-0">
+      <div class="flex flex-col sm:flex-row items-center gap-3">
         <button
           @click="handleViewModal"
-          class="w-full sm:w-auto p-2 sm:p-2 border-2 border-slate-200 rounded-md text-white transition-all ease-in-out duration-75 flex items-center justify-center gap-2 bg-black font-semibold cursor-pointer hover:bg-slate-900 text-sm sm:text-base"
+          class="w-max p-2 border-2 border-slate-200 rounded-md text-white transition-all ease-in-out duration-75 flex items-center justify-center gap-2 bg-black font-semibold cursor-pointer hover:bg-slate-900 text-sm"
         >
           <span class="text-green-500">
             <Microchip class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -51,7 +51,7 @@ const handleViewModal = () => {
         unit="Nu"
         description="Lectura de datos"
       />
-      
+
       <CardsSensor
         :alertHigh="80"
         :alertLow="20"
@@ -63,7 +63,7 @@ const handleViewModal = () => {
         unit="Nu"
         description="Lectura de datos"
       />
-      
+
       <CardsSensor
         :alertHigh="80"
         :alertLow="20"

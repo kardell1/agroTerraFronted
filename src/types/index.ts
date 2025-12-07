@@ -13,8 +13,19 @@ export type SensorType = {
   minvalue: string
   maxvalue: string
   code: string
+  events: EventType[]
 }
 
+export type EventType = {
+  data: string
+  message: string
+  severity: string
+  timestamp: Date
+}
 export interface ResponsePost extends ResponseGenericHttp {
   details: DevicesType[]
+}
+
+export interface ResponseGetHistoric extends ResponseGenericHttp {
+  details: DevicesType
 }

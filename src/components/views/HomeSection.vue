@@ -4,6 +4,27 @@ import { humidityData, temperatureData, co2Data } from '../../data/SensorData.ts
 import SelectModule from '../SelectModule.vue'
 import MainCard from '../../ui/MainCard.vue'
 import HeaderUi from '../../ui/HeaderUi.vue'
+import { ref } from 'vue'
+import { useModuloStore } from '../../store/moduleStore.ts'
+import { watch } from 'vue'
+
+const moduleStore = useModuloStore()
+const isLoading = ref(false)
+watch(
+  moduleStore.selectedDevice,
+  async (newDevice) => {
+    isLoading.value = true
+    console.log('el cambio : ' + newDevice)
+    // ejecutar la solicitud para recuperar los datos del api
+    try {
+    } catch (error) {
+      console.log(error)
+    } finally {
+      isLoading.value = false
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -13,8 +34,8 @@ import HeaderUi from '../../ui/HeaderUi.vue'
         <p class="text-lg font-bold">Visualizacion de datos</p>
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
       </div>
-      <div class="w-full mt-4 md:mt-0 md:w-auto ">
-        <SelectModule :data="[]" />
+      <div class="w-full mt-4 md:mt-0 md:w-auto">
+        <SelectModule />
       </div>
     </HeaderUi>
     <!-- Gráfico de Humedad -->
