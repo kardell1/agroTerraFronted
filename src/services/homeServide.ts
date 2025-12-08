@@ -1,12 +1,12 @@
 import axios from 'axios'
-import type { ResponseGetHistoric } from '../types'
+import type { ResponseGetGraficData } from '../types'
 import { useUserStore } from '../store/authStore'
 
 const homeService = async (uuid: string, months: string) => {
   const userStore = useUserStore()
   // console.time('parse')
   try {
-    const response = await axios.get<ResponseGetHistoric>(
+    const response = await axios.get<ResponseGetGraficData>(
       `${import.meta.env.VITE_API_URL}/sensor/grafics`,
       {
         headers: {
@@ -17,7 +17,7 @@ const homeService = async (uuid: string, months: string) => {
       },
     )
     // console.timeEnd('parse')
-    // console.log('Respuesta exitosa en homeService : ', response.data)
+    console.log('Respuesta exitosa en homeService : ', response.data)
     return response.data.details // success: true
   } catch (error) {
     throw error

@@ -1,48 +1,42 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { useModuloStore } from '../../store/moduleStore'
+import { watch } from 'vue'
 import HeaderUi from '../../ui/HeaderUi.vue'
 import MainCard from '../../ui/MainCard.vue'
 import SelectModule from '../SelectModule.vue'
 import historicService from '../../services/historicService'
 import { ref } from 'vue'
 import type { DevicesType } from '../../types'
-
-const moduleStore = useModuloStore()
-// cada que cambia
-// const uuid = computed(() => moduleStore.selectedDevice?.uuid || '')
+import { computed } from 'vue'
 const data = ref<DevicesType>({
   name: '',
   sensors: [],
   uuid: '',
 })
 const isLoading = ref(false)
+const uuidSelect = ref('')
 
-const sensorSelect = ref('')
 watch(
-  moduleStore.selectedDevice,
+  uuidSelect,
   async (newDevice) => {
+    if (!newDevice) return
     isLoading.value = true
-    console.log('el cambio : ' + newDevice)
-    // ejecutar la solicitud para recuperar los datos del api
     try {
-      const response = await historicService(newDevice.uuid, '1')
-      data.value = response
-      sensorSelect.value = response.sensors[0]?.name || ''
-    } catch (error) {
-      console.log(error)
+      const res = await historicService(newDevice, '1')
+      console.log(res)
+      data.value = res
+      // de aca sacar los datos de los sensores
     } finally {
       isLoading.value = false
     }
   },
   { immediate: true },
 )
-// de cada device mapear sus sensores
-// de cada sensor mapear sus datos
-// debe filtrarse los datos
-const filterData = computed(() =>
-  data.value.sensors.find((item) => item.name === sensorSelect.value),
-)
+const sensorSelect = ref('')
+const selectedSensor = computed(() => {
+  if (!sensorSelect.value) return null
+  return data.value.sensors.find((s) => s.code === sensorSelect.value) || null
+})
+
 const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
 </script>
 <template>
@@ -53,17 +47,7 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
       </div>
       <div>
-        <!-- <button
-          class="bg-orange-400"
-          @click="
-            () => {
-              ;(console.log(data), console.log(sensorSelect))
-            }
-          "
-        >
-          press
-        </button> -->
-        <SelectModule />
+        <SelectModule @select="(val) => (uuidSelect = val)" />
       </div>
     </HeaderUi>
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
@@ -85,17 +69,19 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
             />
           </svg>
           <select
-            class="bg-transparent border-none outline-none text-sm text-gray-700"
             v-model="sensorSelect"
+            class="bg-transparent border-none outline-none text-sm text-gray-700"
           >
             <option disabled>Seleccione un sensor</option>
-            <option :key="i" v-for="(value, i) in data.sensors">{{ value.name }}</option>
+            <option :key="i" :value="value.code" v-for="(value, i) in data.sensors">
+              {{ value.name }}
+            </option>
           </select>
         </div>
       </div>
 
       <!-- Tabla -->
-      <div class="overflow-x-auto -mx-2 sm:mx-0" v-if="!isLoading">
+      <div class="overflow-x-auto -mx-2 sm:mx-0">
         <table class="w-full min-w-[600px] sm:min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -111,7 +97,7 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
 
           <tbody class="bg-white divide-y divide-gray-200">
             <tr
-              v-for="(alert, i) in filterData?.events"
+              v-for="(alert, i) in selectedSensor"
               :key="i"
               class="hover:bg-gray-50 transition-colors"
             >
@@ -119,7 +105,7 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
 
               <td class="px-3 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div
+                  <!-- <div
                     :class="[
                       'w-3 h-3 sm:w-3 sm:h-3 rounded-full mr-2 sm:mr-3',
                       filterData?.name.toLowerCase() === 'humedad'
@@ -129,22 +115,22 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
                   ></div>
                   <span class="text-sm font-medium text-gray-900 capitalize">
                     {{ alert.data }}
-                  </span>
+                  </span> -->
                 </div>
               </td>
 
               <td class="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">
-                {{ alert.timestamp }}
+                <!-- {{ alert.timestamp }} -->
               </td>
 
               <td class="px-3 py-4 text-sm text-gray-900">
                 <div class="break-words min-w-0">
-                  {{ alert.message }}
+                  <!-- {{ alert.message }} -->
                 </div>
               </td>
               <td class="px-3 py-4 text-sm text-gray-900">
                 <div class="break-words min-w-0">
-                  {{ alert.severity }}
+                  <!-- {{ alert.severity }} -->
                 </div>
               </td>
             </tr>

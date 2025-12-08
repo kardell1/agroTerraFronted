@@ -4,8 +4,9 @@ import { useUserStore } from '../store/authStore'
 
 const historicService = async (uuid: string, months: string) => {
   const userStore = useUserStore()
-  // console.time('parse')
   try {
+    console.time('historicService') // ⏱️ inicia medición
+
     const response = await axios.get<ResponseGetHistoric>(
       `${import.meta.env.VITE_API_URL}/sensor/historic`,
       {
@@ -16,11 +17,12 @@ const historicService = async (uuid: string, months: string) => {
         },
       },
     )
-    // console.timeEnd('parse')
-    // console.log('Respuesta exitosa en historicService : ', response.data)
+    console.timeEnd('historicService') // ⏱️ termina y muestra duración
+
     return response.data.details // success: true
   } catch (error) {
     throw error
   }
 }
+
 export default historicService

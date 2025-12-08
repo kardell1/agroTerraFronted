@@ -29,3 +29,14 @@ export interface ResponsePost extends ResponseGenericHttp {
 export interface ResponseGetHistoric extends ResponseGenericHttp {
   details: DevicesType
 }
+
+export type GraficData = {
+  code: string
+  name: string
+  min: string
+  max: string
+  data: { date: string; value: number }[]
+}
+export interface ResponseGetGraficData extends ResponseGenericHttp {
+  details: GraficData[]
+}

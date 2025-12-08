@@ -1,24 +1,23 @@
 <script setup lang="ts">
 import SensorChart from '../SensorChart.vue'
-import { humidityData, temperatureData, co2Data } from '../../data/SensorData.ts'
 import SelectModule from '../SelectModule.vue'
 import MainCard from '../../ui/MainCard.vue'
 import HeaderUi from '../../ui/HeaderUi.vue'
-import { ref } from 'vue'
-import { useModuloStore } from '../../store/moduleStore.ts'
-import { watch } from 'vue'
-
-const moduleStore = useModuloStore()
+import { ref, watch } from 'vue'
+import homeService from '../../services/homeServide.ts'
+import type { GraficData } from '../../types/index.ts'
 const isLoading = ref(false)
+const data = ref<GraficData[]>([])
+const uuidSelect = ref('')
 watch(
-  moduleStore.selectedDevice,
+  uuidSelect,
   async (newDevice) => {
+    if (!newDevice) return
     isLoading.value = true
-    console.log('el cambio : ' + newDevice)
-    // ejecutar la solicitud para recuperar los datos del api
     try {
-    } catch (error) {
-      console.log(error)
+      const res = await homeService(newDevice, '1')
+      // console.log(res)
+      data.value = res
     } finally {
       isLoading.value = false
     }
@@ -26,7 +25,6 @@ watch(
   { immediate: true },
 )
 </script>
-
 <template>
   <MainCard>
     <HeaderUi>
@@ -35,45 +33,22 @@ watch(
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
       </div>
       <div class="w-full mt-4 md:mt-0 md:w-auto">
-        <SelectModule />
+        <SelectModule @select="(val) => (uuidSelect = val)" />
       </div>
     </HeaderUi>
-    <!-- Gráfico de Humedad -->
-    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
-      <SensorChart
-        title="Monitoreo de Humedad"
-        description="Niveles de humedad del suelo"
-        :data="humidityData"
-        color="#10B981"
-        unit="%"
-        :min-y="60"
-        :max-y="85"
-      />
-    </div>
 
-    <!-- Gráfico de Temperatura -->
-    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
+    <!-- Temperatura -->
+    <div :key="i" v-for="(sensor, i) in data" class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
+      <!-- <p>el minimo es : {{ sensor.min }}</p> -->
+      <!-- <p>el maximo es : {{ sensor.max }}</p> -->
       <SensorChart
-        title="Monitoreo de Temperatura"
-        description="Temperatura ambiente"
-        :data="temperatureData"
+        :title="sensor.name"
+        description="Variación diaria"
+        :data="sensor.data"
         color="#EF4444"
         unit="°C"
-        :min-y="15"
-        :max-y="17"
-      />
-    </div>
-
-    <!-- Gráfico de CO2 -->
-    <div class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
-      <SensorChart
-        title="Monitoreo de CO₂"
-        description="Niveles de dióxido de carbono"
-        :data="co2Data"
-        color="#8B5CF6"
-        unit="ppm"
-        :min-y="300"
-        :max-y="800"
+        :min-y="parseFloat(sensor.min) - 1"
+        :max-y="parseFloat(sensor.max) + 1"
       />
     </div>
   </MainCard>

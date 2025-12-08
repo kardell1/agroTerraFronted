@@ -25,20 +25,15 @@ import {
   PointElement,
   CategoryScale,
   LinearScale,
+  Filler,
   type ChartOptions,
 } from 'chart.js'
-
-// Interface para los datos del sensor
-interface SensorData {
-  time: string
-  value: number
-}
 
 // Props con tipado
 interface Props {
   title: string
   description: string
-  data: SensorData[]
+  data: { date: string; value: number }[]
   color: string
   unit: string
   minY: number
@@ -48,15 +43,23 @@ interface Props {
 const props = defineProps<Props>()
 
 // Registrar Chart.js
-ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale)
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Filler,
+)
 
-// Datos del gráfico
 const chartData = computed(() => ({
-  labels: props.data.map((item: SensorData) => item.time),
+  labels: props.data.map((item) => item.date.split('T')[0]),
   datasets: [
     {
       label: `${props.title} (${props.unit})`,
-      data: props.data.map((item: SensorData) => item.value),
+      data: props.data.map((item) => item.value),
       borderColor: props.color,
       backgroundColor: `${props.color}20`,
       borderWidth: 3,
