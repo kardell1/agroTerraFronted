@@ -1,5 +1,6 @@
 import mqtt from 'mqtt' 
 import { ref } from 'vue'
+
 type MqttClient = ReturnType<typeof mqtt.connect>
 
 export function useMqtt() {
@@ -10,12 +11,24 @@ export function useMqtt() {
 
   const connect = (): Promise<void> => {
     return new Promise((resolve, reject) => {
-      // Configuración DIRECTA de tu HiveMQ (del readme.md)
-      const brokerUrl = 'wss://051e1da66fac44cb94d48b068cba3b30.s1.eu.hivemq.cloud:8884/mqtt' //wss://b2253d55de2740b68ac4991e75c5f2f5.s1.eu.hivemq.cloud:8884/mqtt
+      if (client.value?.connected) {
+        isConnected.value = true
+        resolve()
+        return
+      }
+      
+      const brokerUrl = import.meta.env.VITE_MQTT_BROKER_URL
+      const username = import.meta.env.VITE_MQTT_USERNAME
+      const password = import.meta.env.VITE_MQTT_PASSWORD
+      
+      if (!brokerUrl || !username || !password) {
+        reject(new Error('Faltan variables de entorno para MQTT'))
+        return
+      }
       
       client.value = mqtt.connect(brokerUrl, {
-        username: 'admin', //hivemq.webclient.1760647679265
-        password: 'Administrador1', //dhRnEef,83%:lN64@XCL
+        username,
+        password,
         clientId: `agro-web-${Math.random().toString(16).substr(2, 8)}`,
         clean: true,
       })
@@ -32,6 +45,14 @@ export function useMqtt() {
       })
 
       client.value.on('message', (topic: string, message: Buffer) => {
+        // DEBUG DETALLADO
+        console.log('='.repeat(50))
+        console.log('📡 TOPIC RECIBIDO:', topic)
+        console.log('📦 MENSAJE RAW:', message)
+        console.log('📝 MENSAJE STRING:', message.toString())
+        console.log('📊 BYTE LENGTH:', message.byteLength)
+        console.log('='.repeat(50))
+        
         const handler = messageHandlers.get(topic)
         if (handler) {
           handler(message.toString())

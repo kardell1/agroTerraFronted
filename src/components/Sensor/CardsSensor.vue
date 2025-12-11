@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { inject, computed } from 'vue'
-import { ContextSocketKey, type SensorData } from '../../composables/ContextSocket'
+import { computed } from 'vue'
 import ProgresBar from './ProgresBar.vue'
 import { Icon } from '@iconify/vue'
 
@@ -9,7 +8,7 @@ interface Props {
   iconName: string
   styleLine: string
   styleText: string
-  valueKey: keyof SensorData  // 'SensorTemperatura' | 'SensorHumedad' | etc.
+  valueKey: number 
   unit: string
   description: string
   alertHigh?: number
@@ -18,28 +17,26 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// 1. Obtener datos del contexto
-const sensorData = inject<SensorData>(ContextSocketKey)
-
-// 2. Valor actual del sensor (con validación)
 const currentValue = computed(() => {
-  // Validar que existan los datos y la clave
-  if (!sensorData) {
-    console.warn('⚠️ No hay datos de sensores disponibles')
-    return 0
-  }
-  
-  const valueStr = sensorData[props.valueKey]
-  if (!valueStr) {
-    console.warn(`⚠️ No hay valor para ${props.valueKey}`)
-    return 0
-  }
-  
-  const value = parseFloat(valueStr)
-  return isNaN(value) ? 0 : value
+  return props.valueKey || 0
 })
 
-// 3. Lógica de alertas
+const progressPercentage = computed(() => {
+  const high = props.alertHigh ?? 100
+  const low = props.alertLow ?? 0
+  const val = currentValue.value
+  
+  if (high <= low || (high === 100 && low === 0)) {
+    return Math.min(Math.max(val, 0), 100)
+  }
+  
+  if (val <= low) return 0
+  if (val >= high) return 100
+  
+  return ((val - low) / (high - low)) * 100
+})
+
+// Lógica de alertas
 const showAlert = computed(() => {
   const high = props.alertHigh ?? 100
   const low = props.alertLow ?? 0
@@ -49,13 +46,12 @@ const showAlert = computed(() => {
 })
 
 const textColor = computed(() => (showAlert.value ? 'text-red-500' : 'text-slate-700'))
-
-// 4. Debug: Verificar que todo funciona (solo desarrollo)
 if (import.meta.env.DEV) {
   console.log(`🔍 CardsSensor [${props.tittle}]:`, {
-    valueKey: props.valueKey,
-    currentValue: currentValue.value,
-    sensorData: sensorData
+    valorReal: currentValue.value,
+    porcentajeBarra: progressPercentage.value,
+    rangos: `${props.alertLow}-${props.alertHigh}`,
+    alerta: showAlert.value
   })
 }
 </script>
@@ -69,7 +65,7 @@ if (import.meta.env.DEV) {
       <ProgresBar
         :circleWidth="200"
         :radius="75"
-        :porcentaje="currentValue"
+        :porcentaje="progressPercentage"
         :iconName="iconName"
         :styleLine="styleLine"
         :styleText="styleText"
@@ -91,6 +87,10 @@ if (import.meta.env.DEV) {
         <div class="flex items-center gap-1 sm:gap-2">
           <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2em] font-extrabold" :class="textColor">
             {{ currentValue.toFixed(1) }}{{ unit }}
+          </p>
+          <!-- Rangos opcionales -->
+          <p v-if="alertLow !== undefined && alertHigh !== undefined" class="text-xs text-slate-500">
+            (Rango: {{ alertLow }} - {{ alertHigh }}{{ unit }})
           </p>
         </div>
       </div>

@@ -4,10 +4,10 @@ import authForm from '../composables/forms/authForm.ts'
 import authHandler from '../composables/handlers/authHandler'
 import fondo from '../assets/images/fondoLogin3.avif'
 import { useRouter } from 'vue-router'
-// const { username, password, errors, validate } = authForm()
-// asdsad
+
 const router = useRouter()
 const { username, password, errors, validate } = authForm()
+
 const handleClick = () => {
   router.push({ name: 'home' })
   validate()
@@ -33,12 +33,14 @@ const handleClick = () => {
       </div>
       <div class="flex flex-col gap-3 sm:gap-4">
         <InputCredentials
+          :model-value="username"
           title="Usuario"
           placeholder="Usuario"
           type="text"
           @update:model-value="(val: string) => (username = val)"
         />
         <InputCredentials
+          :model-value="password"
           title="Contraseña"
           placeholder="Contraseña"
           type="password"
@@ -54,5 +56,3 @@ const handleClick = () => {
     </div>
   </section>
 </template>
-
-<style></style>
