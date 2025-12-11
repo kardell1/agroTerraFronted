@@ -6,7 +6,18 @@ import { v4 as uuidv4 } from 'uuid'
 const moduleForm = ref({
   device_name: '',
   device_section: '',
-  device_sensors: [{}, {}, {}],
+  device_sensors: [
+    {
+      // name : Temperatura
+      // min :
+      // max :
+      // code : TMP
+    },
+    {
+      //name : Humedad
+    },
+    {},
+  ],
 })
 // Generar UUID v4 automáticamente
 const generateUUID = () => {
