@@ -37,7 +37,6 @@ watch(
       </div>
     </HeaderUi>
 
-    <!-- Temperatura -->
     <div :key="i" v-for="(sensor, i) in data" class="bg-white shadow-sm p-4 sm:p-6 rounded-lg">
       <!-- <p>el minimo es : {{ sensor.min }}</p> -->
       <!-- <p>el maximo es : {{ sensor.max }}</p> -->

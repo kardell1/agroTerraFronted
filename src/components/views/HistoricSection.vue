@@ -7,6 +7,7 @@ import historicService from '../../services/historicService'
 import { ref } from 'vue'
 import type { DevicesType } from '../../types'
 import { computed } from 'vue'
+import cleanDate from '../../helpers/cleanDate'
 const data = ref<DevicesType>({
   name: '',
   sensors: [],
@@ -37,7 +38,7 @@ const selectedSensor = computed(() => {
   return data.value.sensors.find((s) => s.code === sensorSelect.value) || null
 })
 
-const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
+const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje']
 </script>
 <template>
   <MainCard>
@@ -79,7 +80,6 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
           </select>
         </div>
       </div>
-
       <!-- Tabla -->
       <div class="overflow-x-auto -mx-2 sm:mx-0">
         <table class="w-full min-w-[600px] sm:min-w-full divide-y divide-gray-200">
@@ -97,42 +97,14 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje', 'Prioridad']
 
           <tbody class="bg-white divide-y divide-gray-200">
             <tr
-              v-for="(alert, i) in selectedSensor"
+              v-for="(alert, i) in selectedSensor?.events"
               :key="i"
               class="hover:bg-gray-50 transition-colors"
             >
-              <td class="px-3 py-4 text-sm text-gray-900 font-medium">{{ i + 1 }}</td>
-
-              <td class="px-3 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <!-- <div
-                    :class="[
-                      'w-3 h-3 sm:w-3 sm:h-3 rounded-full mr-2 sm:mr-3',
-                      filterData?.name.toLowerCase() === 'humedad'
-                        ? 'bg-blue-500'
-                        : 'bg-orange-500',
-                    ]"
-                  ></div>
-                  <span class="text-sm font-medium text-gray-900 capitalize">
-                    {{ alert.data }}
-                  </span> -->
-                </div>
-              </td>
-
-              <td class="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">
-                <!-- {{ alert.timestamp }} -->
-              </td>
-
-              <td class="px-3 py-4 text-sm text-gray-900">
-                <div class="break-words min-w-0">
-                  <!-- {{ alert.message }} -->
-                </div>
-              </td>
-              <td class="px-3 py-4 text-sm text-gray-900">
-                <div class="break-words min-w-0">
-                  <!-- {{ alert.severity }} -->
-                </div>
-              </td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ alert.data }}</td>
+              <td>{{ cleanDate(alert.timestamp) }}</td>
+              <td>{{ alert.message }}</td>
             </tr>
           </tbody>
         </table>
