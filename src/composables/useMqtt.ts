@@ -45,14 +45,7 @@ export function useMqtt() {
       })
 
       client.value.on('message', (topic: string, message: Buffer) => {
-        // DEBUG DETALLADO
-        console.log('='.repeat(50))
         console.log('📡 TOPIC RECIBIDO:', topic)
-        console.log('📦 MENSAJE RAW:', message)
-        console.log('📝 MENSAJE STRING:', message.toString())
-        console.log('📊 BYTE LENGTH:', message.byteLength)
-        console.log('='.repeat(50))
-        
         const handler = messageHandlers.get(topic)
         if (handler) {
           handler(message.toString())

@@ -33,8 +33,15 @@ const currentSensors = computed(() => {
 
 const processMqttMessage = (message: string) => {
   console.log('📨 Mensaje MQTT recibido:', message)
-  const parsedData = parseMqttMessage(message)
-  console.log('📊 Datos parseados:', parsedData)
+  const { uuid: messageUuid, data: parsedData } = parseMqttMessage(message)
+  console.log('📊 Datos parseados:', { messageUuid, parsedData })
+  
+  // Solo procesar si el UUID coincide con el módulo seleccionado
+  if (messageUuid !== currentDevice.value?.uuid) {
+    console.log(`⏭️ Ignorando mensaje de UUID: ${messageUuid} (no es el seleccionado)`)
+    return
+  }
+  
   const updatedValues = { ...sensorValues.value }
   Object.entries(parsedData).forEach(([code, value]) => {
     updatedValues[code] = value
