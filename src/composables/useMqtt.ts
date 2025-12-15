@@ -1,4 +1,4 @@
-import mqtt from 'mqtt' 
+import mqtt from 'mqtt'
 import { ref } from 'vue'
 
 type MqttClient = ReturnType<typeof mqtt.connect>
@@ -6,7 +6,7 @@ type MqttClient = ReturnType<typeof mqtt.connect>
 export function useMqtt() {
   const client = ref<MqttClient | null>(null)
   const isConnected = ref(false)
-  
+
   const messageHandlers = new Map<string, (message: string) => void>()
 
   const connect = (): Promise<void> => {
@@ -16,16 +16,16 @@ export function useMqtt() {
         resolve()
         return
       }
-      
+
       const brokerUrl = import.meta.env.VITE_MQTT_BROKER_URL
       const username = import.meta.env.VITE_MQTT_USERNAME
       const password = import.meta.env.VITE_MQTT_PASSWORD
-      
+
       if (!brokerUrl || !username || !password) {
         reject(new Error('Faltan variables de entorno para MQTT'))
         return
       }
-      
+
       client.value = mqtt.connect(brokerUrl, {
         username,
         password,
@@ -34,7 +34,7 @@ export function useMqtt() {
       })
 
       client.value.on('connect', () => {
-        console.log('✅ Conectado a HiveMQ')
+        // console.log('✅ Conectado a HiveMQ')
         isConnected.value = true
         resolve()
       })
@@ -53,7 +53,7 @@ export function useMqtt() {
       })
 
       client.value.on('close', () => {
-        console.log('🔌 Desconectado de MQTT')
+        // console.log('🔌 Desconectado de MQTT')
         isConnected.value = false
       })
     })
@@ -66,7 +66,7 @@ export function useMqtt() {
     }
 
     messageHandlers.set(topic, callback)
-    
+
     client.value.subscribe(topic, (err) => {
       if (err) {
         console.error(`Error suscribiendo a ${topic}:`, err)

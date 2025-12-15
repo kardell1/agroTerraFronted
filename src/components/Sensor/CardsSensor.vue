@@ -8,7 +8,7 @@ interface Props {
   iconName: string
   styleLine: string
   styleText: string
-  valueKey: number 
+  valueKey: number
   unit: string
   description: string
   alertHigh?: number
@@ -25,14 +25,14 @@ const progressPercentage = computed(() => {
   const high = props.alertHigh ?? 100
   const low = props.alertLow ?? 0
   const val = currentValue.value
-  
+
   if (high <= low || (high === 100 && low === 0)) {
     return Math.min(Math.max(val, 0), 100)
   }
-  
+
   if (val <= low) return 0
   if (val >= high) return 100
-  
+
   return ((val - low) / (high - low)) * 100
 })
 
@@ -41,19 +41,19 @@ const showAlert = computed(() => {
   const high = props.alertHigh ?? 100
   const low = props.alertLow ?? 0
   const val = currentValue.value
-  
+
   return val > high || val < low
 })
 
 const textColor = computed(() => (showAlert.value ? 'text-red-500' : 'text-slate-700'))
-if (import.meta.env.DEV) {
-  console.log(`🔍 CardsSensor [${props.tittle}]:`, {
-    valorReal: currentValue.value,
-    porcentajeBarra: progressPercentage.value,
-    rangos: `${props.alertLow}-${props.alertHigh}`,
-    alerta: showAlert.value
-  })
-}
+// if (import.meta.env.DEV) {
+//   console.log(`🔍 CardsSensor [${props.tittle}]:`, {
+//     valorReal: currentValue.value,
+//     porcentajeBarra: progressPercentage.value,
+//     rangos: `${props.alertLow}-${props.alertHigh}`,
+//     alerta: showAlert.value
+//   })
+// }
 </script>
 
 <template>
@@ -75,21 +75,34 @@ if (import.meta.env.DEV) {
           v-if="showAlert"
           class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white p-1 sm:p-2 rounded-full shadow-md animate-bounce"
         >
-          <Icon icon="mingcute:alert-fill" width="12" height="12" class="sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+          <Icon
+            icon="mingcute:alert-fill"
+            width="12"
+            height="12"
+            class="sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6"
+          />
         </div>
       </transition>
     </div>
 
     <div class="flex flex-col justify-around">
-      <p class="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-slate-700">{{ tittle }}</p>
+      <p class="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-slate-700">
+        {{ tittle }}
+      </p>
       <div class="flex gap-1 sm:gap-2 flex-col">
         <p class="text-xs font-medium">{{ description }} :</p>
         <div class="flex items-center gap-1 sm:gap-2">
-          <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2em] font-extrabold" :class="textColor">
+          <p
+            class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[2em] font-extrabold"
+            :class="textColor"
+          >
             {{ currentValue.toFixed(1) }}{{ unit }}
           </p>
           <!-- Rangos opcionales -->
-          <p v-if="alertLow !== undefined && alertHigh !== undefined" class="text-xs text-slate-500">
+          <p
+            v-if="alertLow !== undefined && alertHigh !== undefined"
+            class="text-xs text-slate-500"
+          >
             (Rango: {{ alertLow }} - {{ alertHigh }}{{ unit }})
           </p>
         </div>

@@ -9,7 +9,7 @@ const emit = defineEmits<{
 const handleSelect = (e: Event) => {
   const target = e.target as HTMLSelectElement
   const uuid = target.value
-  console.log('valor seleccionado : ' + uuid)
+  // console.log('valor seleccionado : ' + uuid)
   emit('select', uuid)
 }
 </script>
