@@ -23,9 +23,13 @@ watch(
     isLoading.value = true
     try {
       const res = await historicService(newDevice, '1')
-      console.log(res)
-      data.value = res
-      // de aca sacar los datos de los sensores
+      // console.log(res)
+      // data.value = res
+      data.value = {
+        name: res?.name ?? '',
+        uuid: res?.uuid ?? '',
+        sensors: Array.isArray(res?.sensors) ? res.sensors : [],
+      }
     } finally {
       isLoading.value = false
     }
