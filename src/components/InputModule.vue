@@ -52,7 +52,10 @@ const createModule = async () => {
       },
     })
     console.log(response)
-    userStore.addDevice(response.data)
+    userStore.addDevice({
+      ...response.data,
+      name: response.data.device_name  // Mapea device_name a name
+    })
   } catch (error) {
     console.error('Error:', error)
     // alert('Error al crear el módulo')
