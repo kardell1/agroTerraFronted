@@ -24,7 +24,7 @@ const sensorValues = ref<Record<string, number>>({})
 
 const currentDevice = computed(() => {
   if (!moduloStore.selectedDevice.uuid) return null
-  return userStore.devices.find(device => device.uuid === moduloStore.selectedDevice.uuid)
+  return userStore.devices.find((device) => device.uuid === moduloStore.selectedDevice.uuid)
 })
 
 const currentSensors = computed(() => {
@@ -35,13 +35,13 @@ const processMqttMessage = (message: string) => {
   console.log('📨 Mensaje MQTT recibido:', message)
   const { uuid: messageUuid, data: parsedData } = parseMqttMessage(message)
   console.log('📊 Datos parseados:', { messageUuid, parsedData })
-  
+
   // Solo procesar si el UUID coincide con el módulo seleccionado
   if (messageUuid !== currentDevice.value?.uuid) {
     console.log(`⏭️ Ignorando mensaje de UUID: ${messageUuid} (no es el seleccionado)`)
     return
   }
-  
+
   const updatedValues = { ...sensorValues.value }
   Object.entries(parsedData).forEach(([code, value]) => {
     updatedValues[code] = value
@@ -53,56 +53,62 @@ const processMqttMessage = (message: string) => {
 const connectMqttForDevice = async () => {
   disconnect()
   sensorValues.value = {}
-  
+
   if (!currentDevice.value) return
-  
+  const topic = import.meta.env.VITE_MQTT_TOPIC
+  // console.log(topic)
+  // console.log(typeof topic)
   try {
     await connect()
-    subscribe('test/sensors', processMqttMessage)
+    subscribe(`${topic}/datos`, processMqttMessage)
   } catch (error) {
     console.error('❌ Error MQTT:', error)
   }
 }
 
 // Watch simplificado
-watch(() => moduloStore.selectedDevice.uuid, (newUuid) => {
-  if (newUuid) connectMqttForDevice()
-}, { immediate: true })
+watch(
+  () => moduloStore.selectedDevice.uuid,
+  (newUuid) => {
+    if (newUuid) connectMqttForDevice()
+  },
+  { immediate: true },
+)
 
 onUnmounted(() => {
   disconnect()
 })
 
 const getSensorData = (sensorCode: string) => {
-  const sensor = currentSensors.value.find(s => s.code === sensorCode)
+  const sensor = currentSensors.value.find((s) => s.code === sensorCode)
   if (!sensor) return null
-  
+
   const minvalue = Number(sensor.minvalue)
   const maxvalue = Number(sensor.maxvalue)
-  
+
   const displayConfigs = {
-    'TMP': { 
+    TMP: {
       icon: iconoTemp,
       color: '#ef4444',
       textColor: 'text-red-500',
-      unit: '°C'
+      unit: '°C',
     },
-    'HMD': { 
+    HMD: {
       icon: iconoHumedad,
       color: '#3b82f6',
       textColor: 'text-blue-500',
-      unit: '%'
+      unit: '%',
     },
-    'DC': { 
+    DC: {
       icon: iconoCO,
       color: '#10b981',
       textColor: 'text-green-500',
-      unit: '%'
-    }
+      unit: '%',
+    },
   }
-  
+
   const display = displayConfigs[sensorCode as keyof typeof displayConfigs] || {}
-  
+
   const currentValue = sensorValues.value[sensorCode] || 0
 
   return {
@@ -110,7 +116,7 @@ const getSensorData = (sensorCode: string) => {
     ...display,
     minvalue,
     maxvalue,
-    currentValue
+    currentValue,
   }
 }
 
@@ -136,17 +142,19 @@ const handleViewModal = () => {
           </span>
           Agregar modulo
         </button>
-        <SelectModule 
-          @select="(uuid) => {
-            const device = userStore.devices.find(d => d.uuid === uuid)
-            if (device) moduloStore.setDevice(device.name, uuid)
-          }"
-          :data="userStore.devices" 
-          class="w-full sm:w-auto" 
+        <SelectModule
+          @select="
+            (uuid) => {
+              const device = userStore.devices.find((d) => d.uuid === uuid)
+              if (device) moduloStore.setDevice(device.name, uuid)
+            }
+          "
+          :data="userStore.devices"
+          class="w-full sm:w-auto"
         />
       </div>
     </HeaderUi>
-    
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
       <CardsSensor
         v-if="getSensorData('TMP')"
