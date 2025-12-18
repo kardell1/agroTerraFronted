@@ -1,133 +1,63 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import { ref } from 'vue'
 import { useModalStore } from '../store/modalStore'
 import { useUserStore } from '../store/authStore'
+import axios from 'axios'
 
 const modal = useModalStore()
 const userStore = useUserStore()
 
 const API_URL = import.meta.env.VITE_API_URL?.trim()
-
-// Configuración fija de los 3 sensores - CON LOS NOMBRES QUE ESPERA LA API
-const sensorConfig = [
-  {
-    sensor_name: 'Temperatura',
-    sensor_code: 'TMP',
-    sensor_type: 'temperature',
-    unit: '°C',
-  },
-  {
-    sensor_name: 'Humedad',
-    sensor_code: 'HMD',
-    sensor_type: 'humidity',
-    unit: '%',
-  },
-  {
-    sensor_name: 'Dióxido de Carbono',
-    sensor_code: 'DC',
-    sensor_type: 'custom',
-    unit: 'ppm',
-  },
-]
-
 // Datos del formulario - usando exactamente los nombres que espera la API
 const moduleForm = ref({
   device_name: '',
   device_section: '',
-  device_sensors: sensorConfig.map((sensor) => ({
-    ...sensor,
-    sensor_min: null as number | null,
-    sensor_max: null as number | null,
-    sensor_description: 'descripcion', // Campo opcional que espera la API
-  })),
-})
-
-const device_uuid = ref(uuidv4())
-const regenerateUUID = () => {
-  device_uuid.value = uuidv4()
-}
-
-// Validar que todos los sensores tengan valores correctos
-const allSensorsHaveValues = computed(() => {
-  return moduleForm.value.device_sensors.every((sensor) => {
-    const min = sensor.sensor_min
-    const max = sensor.sensor_max
-
-    return min !== null && max !== null && !isNaN(min) && !isNaN(max) && Number(min) < Number(max)
-  })
-})
-
-// Validar el formulario completo
-const isFormValid = computed(() => {
-  return (
-    moduleForm.value.device_name.trim().length >= 3 &&
-    moduleForm.value.device_name.trim().length <= 50 &&
-    moduleForm.value.device_section.trim().length >= 3 &&
-    moduleForm.value.device_section.trim().length <= 30 &&
-    allSensorsHaveValues.value
-  )
+  device_uuid: '',
+  device_sensors: [
+    {
+      sensor_name: 'Temperatura',
+      sensor_code: 'TMP',
+      sensor_type: 'temperature',
+      unit: '°C',
+      sensor_min: '',
+      sensor_max: '',
+    },
+    {
+      sensor_name: 'Humedad',
+      sensor_code: 'HMD',
+      sensor_type: 'humidity',
+      unit: '%',
+      sensor_min: '',
+      sensor_max: '',
+    },
+    {
+      sensor_name: 'Dioxido de Carbono',
+      sensor_code: 'DC',
+      sensor_type: 'custom',
+      unit: 'ppm',
+      sensor_min: '',
+      sensor_max: '',
+    },
+  ],
 })
 
 // Función para crear el módulo
 const createModule = async () => {
-  if (!isFormValid.value) return
-
-  // Preparar datos EXACTAMENTE como los espera la API
-  const requestData = {
-    device_name: moduleForm.value.device_name,
-    device_uuid: device_uuid.value,
-    device_section: moduleForm.value.device_section,
-    device_sensors: moduleForm.value.device_sensors.map((sensor) => ({
-      sensor_name: sensor.sensor_name,
-      sensor_code: sensor.sensor_code,
-      sensor_min: Number(sensor.sensor_min),
-      sensor_max: Number(sensor.sensor_max),
-      sensor_type: sensor.sensor_type,
-      sensor_description: sensor.sensor_description || undefined, // Opcional
-    })),
-  }
-
-  console.log('Enviando a la API:', requestData)
-
+  // console.log(moduleForm.value)
   try {
-    const response = await fetch(`${API_URL}/sensor/create`, {
-      method: 'POST',
+    const response = await axios.post(`${API_URL}/sensor/create`, moduleForm.value, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userStore.token}`,
       },
-      body: JSON.stringify(requestData),
     })
-
-    const result = await response.json()
-
-    if (result.success) {
-      resetForm()
-      modal.close()
-      alert('Módulo creado exitosamente')
-    } else {
-      alert(`Error: ${result.msg}`)
-    }
+    console.log(response)
   } catch (error) {
     console.error('Error:', error)
-    alert('Error al crear el módulo')
+    // alert('Error al crear el módulo')
+  } finally {
+    modal.close()
   }
-}
-
-// Función para resetear el formulario
-const resetForm = () => {
-  moduleForm.value = {
-    device_name: '',
-    device_section: '',
-    device_sensors: sensorConfig.map((sensor) => ({
-      ...sensor,
-      sensor_min: null,
-      sensor_max: null,
-      sensor_description: '',
-    })),
-  }
-  device_uuid.value = uuidv4()
 }
 </script>
 
@@ -178,19 +108,10 @@ const resetForm = () => {
           <label class="block text-sm font-medium text-gray-700 mb-1"> UUID del Dispositivo </label>
           <div class="flex items-center gap-2">
             <input
-              :value="device_uuid"
+              v-model="moduleForm.device_uuid"
               type="text"
-              readonly
               class="w-full p-2 border border-gray-300 rounded-lg bg-gray-50"
             />
-            <button
-              type="button"
-              @click="regenerateUUID"
-              class="px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
-              title="Generar nuevo UUID"
-            >
-              🔄
-            </button>
           </div>
         </div>
       </div>
@@ -202,19 +123,19 @@ const resetForm = () => {
 
       <div class="space-y-4">
         <div
-          v-for="(sensor, index) in moduleForm.device_sensors"
+          v-for="(value, index) in moduleForm.device_sensors"
           :key="index"
           class="p-4 bg-gray-50 rounded-lg space-y-3"
         >
-          <h5 class="font-medium text-gray-800">{{ sensor.sensor_name }}</h5>
+          <h5 class="font-medium text-gray-800">{{ value.sensor_name }}</h5>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                Mínimo ({{ sensor.unit }})
+                Mínimo ({{ value.unit }})
               </label>
               <input
-                v-model.number="sensor.sensor_min"
+                v-model="value.sensor_min"
                 type="number"
                 step="0.1"
                 placeholder="Mínimo"
@@ -224,10 +145,10 @@ const resetForm = () => {
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                Máximo ({{ sensor.unit }})
+                Máximo ({{ value.unit }})
               </label>
               <input
-                v-model.number="sensor.sensor_max"
+                v-model="value.sensor_max"
                 type="number"
                 step="0.1"
                 placeholder="Máximo"
@@ -235,17 +156,6 @@ const resetForm = () => {
               />
             </div>
           </div>
-
-          <p
-            v-if="
-              sensor.sensor_min !== null &&
-              sensor.sensor_max !== null &&
-              Number(sensor.sensor_min) >= Number(sensor.sensor_max)
-            "
-            class="text-xs text-red-500"
-          >
-            El mínimo debe ser menor que el máximo
-          </p>
         </div>
       </div>
     </div>
@@ -255,18 +165,12 @@ const resetForm = () => {
       <button
         type="button"
         @click="createModule"
-        :disabled="!isFormValid"
         :class="[
-          'w-full px-4 py-3 text-white rounded-lg font-medium',
-          isFormValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed',
+          'w-full px-4 py-3 text-white rounded-lg font-medium bg-blue-600 hover:bg-blue-700',
         ]"
       >
         Agregar
       </button>
-
-      <div v-if="!isFormValid" class="text-xs text-gray-600 mt-2">
-        Complete todos los campos requeridos correctamente
-      </div>
     </div>
   </div>
 </template>
