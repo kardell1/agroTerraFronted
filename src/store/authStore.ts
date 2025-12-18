@@ -38,5 +38,8 @@ export const useUserStore = defineStore('user', {
       this.isAuthenticated = isAuthenticated
       this.devices = devices
     },
+    addDevice(device: DevicesType) {
+      this.devices.push(device)
+    },
   },
 })

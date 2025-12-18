@@ -52,6 +52,7 @@ const createModule = async () => {
       },
     })
     console.log(response)
+    userStore.addDevice(response.data)
   } catch (error) {
     console.error('Error:', error)
     // alert('Error al crear el módulo')
