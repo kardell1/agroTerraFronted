@@ -75,8 +75,8 @@ const isFormValid = computed(() => {
   )
 })
 
-// Función para crear el módulo
 const createModule = async () => {
+<<<<<<< Updated upstream
   if (!isFormValid.value) return
   
   // Preparar datos EXACTAMENTE como los espera la API
@@ -96,6 +96,8 @@ const createModule = async () => {
   
   console.log('Enviando a la API:', requestData)
   
+=======
+>>>>>>> Stashed changes
   try {
     const response = await fetch(`${API_URL}/sensor/create`, {
       method: 'POST',
@@ -103,6 +105,7 @@ const createModule = async () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userStore.token}`
       },
+<<<<<<< Updated upstream
       body: JSON.stringify(requestData)
     })
     
@@ -136,6 +139,32 @@ const resetForm = () => {
   }
   device_uuid.value = uuidv4()
 }
+=======
+    });
+    
+    // Solo si API confirma éxito
+    if (response.data.success === true) {
+      userStore.addDevice({
+        uuid: moduleForm.value.device_uuid,
+        name: moduleForm.value.device_name,
+        sensors: moduleForm.value.device_sensors.map(sensor => ({
+          name: sensor.sensor_name,
+          code: sensor.sensor_code,
+          minvalue: sensor.sensor_min || "0",
+          maxvalue: sensor.sensor_max || "100",
+          type: sensor.sensor_type,
+          events: []
+        }))
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    modal.close();
+  }
+};
+>>>>>>> Stashed changes
 </script>
 
 <template>

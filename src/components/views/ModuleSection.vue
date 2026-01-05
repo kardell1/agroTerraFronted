@@ -136,6 +136,7 @@ const handleViewModal = () => {
           </span>
           Agregar modulo
         </button>
+<<<<<<< Updated upstream
         <SelectModule 
           @select="(uuid) => {
             const device = userStore.devices.find(d => d.uuid === uuid)
@@ -143,6 +144,17 @@ const handleViewModal = () => {
           }"
           :data="userStore.devices" 
           class="w-full sm:w-auto" 
+=======
+        <SelectModule
+          :key="userStore.devices.length"
+          @select="
+            (uuid) => {
+              const device = userStore.devices.find((d) => d.uuid === uuid)
+              if (device) moduloStore.setDevice(device.name, uuid)
+            }
+          "
+          class="w-full sm:w-auto"
+>>>>>>> Stashed changes
         />
       </div>
     </HeaderUi>
