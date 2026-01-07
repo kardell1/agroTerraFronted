@@ -49,7 +49,6 @@ export type Sensor = {
   sensor_min: string
   sensor_max: string
 }
-
 // Luego el tipo del form completo
 export type ModuleForm = {
   device_name: string
@@ -57,3 +56,15 @@ export type ModuleForm = {
   device_uuid: string
   device_sensors: Sensor[]
 }
+// export type DevicesType = {
+//   name: string
+//   uuid: string
+//   sensors: SensorType[]
+// }
+// export type SensorType = {
+//   name: string
+//   minvalue: string
+//   maxvalue: string
+//   code: string
+//   events: EventType[]
+// }
