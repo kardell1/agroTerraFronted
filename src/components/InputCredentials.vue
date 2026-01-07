@@ -1,18 +1,4 @@
 <script setup lang="ts">
-// mi input necesita un valor inicial
-// mi input necsita un place holder
-// mi input requiere tener un type
-// mi input icon
-
-// dentro de su logica interna
-// evaluar el tipo que recibimos
-// si es de typo = password -> mostramos el icon de ojo cerrado
-// si presionamos el boton del ojo -> mi type va ser text
-
-// emmit -> esto lo que hace es definir una funcion que emite algo
-
-// este componente de props , esta mal escrito....
-// revisa el SelectModulo para reescribirlo
 defineProps<{
   title: string
   placeholder: string
@@ -20,12 +6,9 @@ defineProps<{
   modelValue: string
 }>()
 
-// 3. Definimos los eventos que puede emitir el componente
 const emit = defineEmits(['update:modelValue'])
 
-// 4. Función para emitir el cambio de valor
 const handleInput = (event: Event) => {
-  // Emitimos el nuevo valor al parent, usando el nombre estándar 'update:modelValue'
   emit('update:modelValue', (event.target as HTMLInputElement).value)
 }
 </script>

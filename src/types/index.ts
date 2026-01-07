@@ -40,3 +40,20 @@ export type GraficData = {
 export interface ResponseGetGraficData extends ResponseGenericHttp {
   details: GraficData[]
 }
+
+export type Sensor = {
+  sensor_name: string
+  sensor_code: string
+  sensor_type: string
+  unit: string
+  sensor_min: string
+  sensor_max: string
+}
+
+// Luego el tipo del form completo
+export type ModuleForm = {
+  device_name: string
+  device_section: string
+  device_uuid: string
+  device_sensors: Sensor[]
+}
