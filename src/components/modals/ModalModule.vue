@@ -11,7 +11,7 @@ const { moduleForm, validation, errors } = useModuleForm()
 const createModule = async () => {
   const isValid = validation()
   if (!isValid) {
-    console.log('Formulario inválido', errors.value)
+    // console.log('Formulario inválido', errors.value)
     return
   }
   await moduleHandler(moduleForm.value)

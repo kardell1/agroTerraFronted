@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue'
 import HeaderUi from '../../ui/HeaderUi.vue'
 import MainCard from '../../ui/MainCard.vue'
 import SelectModule from '../SelectModule.vue'
@@ -15,28 +14,26 @@ const data = ref<DevicesType>({
 })
 const isLoading = ref(false)
 const uuidSelect = ref('')
-
-watch(
-  uuidSelect,
-  async (newDevice) => {
-    if (!newDevice) return
-    isLoading.value = true
-    try {
-      const res = await historicService(newDevice, '1')
-      // console.log(res)
-      // data.value = res
-      data.value = {
-        name: res?.name ?? '',
-        uuid: res?.uuid ?? '',
-        sensors: Array.isArray(res?.sensors) ? res.sensors : [],
-      }
-    } finally {
-      isLoading.value = false
-    }
-  },
-  { immediate: true },
-)
 const sensorSelect = ref('')
+
+const handleSearch = async () => {
+  if (!uuidSelect.value) return
+  isLoading.value = true
+  try {
+    const res = await historicService(uuidSelect.value, '1')
+    // console.log(res)
+    // data.value = res
+    data.value = {
+      name: res?.name ?? '',
+      uuid: res?.uuid ?? '',
+      sensors: Array.isArray(res?.sensors) ? res.sensors : [],
+    }
+  } finally {
+    sensorSelect.value = ''
+    isLoading.value = false
+  }
+}
+
 const selectedSensor = computed(() => {
   if (!sensorSelect.value) return null
   return data.value.sensors.find((s) => s.code === sensorSelect.value) || null
@@ -51,8 +48,14 @@ const headers = ['Nro', 'Medicion', 'Hora y alerta', 'Mensaje']
         <p class="text-lg font-bold">Visualizacion de datos</p>
         <p class="text-slate-500 text-[0.90rem]">Graficos y metricas de sensores</p>
       </div>
-      <div>
+      <div class="flex items-center gap-2">
         <SelectModule @select="(val) => (uuidSelect = val)" />
+        <button
+          class="bg-green-400 rounded-sm p-2 font-bold cursor-pointer hover:bg-green-500"
+          @click="handleSearch"
+        >
+          Buscar
+        </button>
       </div>
     </HeaderUi>
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">

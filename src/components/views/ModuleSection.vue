@@ -76,6 +76,7 @@ watch(
 )
 
 onUnmounted(() => {
+  moduloStore.cleanDevice()
   disconnect()
 })
 
@@ -155,7 +156,10 @@ const handleViewModal = () => {
       </div>
     </HeaderUi>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+    <div
+      v-if="moduloStore.selectedDevice.uuid !== ''"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+    >
       <CardsSensor
         v-if="getSensorData('TMP')"
         :alertHigh="getSensorData('TMP')!.maxvalue"

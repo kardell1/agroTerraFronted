@@ -13,5 +13,9 @@ export const useModuloStore = defineStore('module', {
       this.selectedDevice.name = name
       this.selectedDevice.uuid = uuid
     },
+    cleanDevice() {
+      this.selectedDevice.name = ''
+      this.selectedDevice.uuid = ''
+    },
   },
 })

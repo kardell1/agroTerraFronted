@@ -46,6 +46,7 @@ const handleClick = () => {
           type="password"
           @update:model-value="(val: string) => (password = val)"
         />
+        <p class="text-center text-red-500 font-bold">{{ errors[0] }}</p>
         <button
           @click="handleClick"
           class="w-full py-2.5 sm:py-3 mt-2 sm:mt-4 text-sm sm:text-base md:text-lg font-semibold rounded-full bg-white text-black hover:bg-green-700 transition duration-300 shadow-xl"

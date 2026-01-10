@@ -12,7 +12,7 @@ const authHandler = async (username: string, password: string, errors: string[])
 
   try {
     const res = await authService(username, password)
-    console.log(res)
+    // console.log(res)
 
     if (!res.success) {
       router.push('/')
